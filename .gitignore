@@ -1,0 +1,11 @@
+**/.DS_Store
+
+**/logs/
+**/*.mv.db
+**/*.iml
+**/*.iws
+**/*.ipr
+**/file-uploads/
+**/build/
+**/node_modules/
+**/.gradle/

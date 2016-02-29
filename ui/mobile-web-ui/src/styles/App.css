@@ -1,0 +1,22 @@
+.makeItCenter {
+  text-align: center;
+}
+
+
+.temperature {
+  height: 200px;
+  width: 200px;
+  margin: 20px;
+  text-align: center;
+  display: inline-block;
+}
+
+.temperature div {
+  padding-top: 60px;
+  font-size: 3em;
+}
+
+.temperature div.setTo {
+  padding-top: 10px;
+  font-size: 1em;
+}

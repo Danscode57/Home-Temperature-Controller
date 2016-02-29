@@ -1,0 +1,5 @@
+{
+  "serialPort": {
+    "path": "/dev/ttyACM0"
+  }
+}
