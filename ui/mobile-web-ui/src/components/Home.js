@@ -3,7 +3,6 @@ require('styles/App.css');
 
 import R from 'ramda';
 import React from 'react';
-import AppBar from 'material-ui/lib/app-bar';
 import Paper from 'material-ui/lib/paper';
 import { Card, CardText } from 'material-ui/lib/card';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
@@ -11,8 +10,7 @@ import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 import ContentRemove from 'material-ui/lib/svg-icons/content/remove';
 import {blue500, amber500, red500} from 'material-ui/lib/styles/colors';
 
-
-class AppComponent extends React.Component {
+class HomeComponent extends React.Component {
 
     constructor(props) {
         super(props);
@@ -32,7 +30,7 @@ class AppComponent extends React.Component {
 
     getTempUrl() {
         //return 'http://' + window.location.hostname + ':8080/temp';
-        return 'http://192.168.1.78:8080/temp';
+        return 'http://192.168.1.84:8080/temp';
     }
 
     handleError(error) {
@@ -141,38 +139,37 @@ class AppComponent extends React.Component {
         }
 
         return (
-            <div>
-                <AppBar title="House Temp"/>
-                <div className="makeItCenter">
-                    <Paper className="temperature" zDepth={5} circle={true} style={heatingStyle}>
-                        <div>
-                            <span>{this.state.currentTemp.toFixed(1)} °C</span>
-                        </div>
-                        <div className="setTo">
-                            <span>Set to: {this.state.setTemp.toFixed(1)} °C</span>
-                        </div>
-                    </Paper>
-                    <div style={{marginTop: 50}}>
-                        <FloatingActionButton style={marginRight} onClick={this.handleDown.bind(this)} disabled={this.state.buttonDisabled}>
-                            <ContentRemove />
-                        </FloatingActionButton>
-                        <FloatingActionButton secondary={true} style={marginLeft} onClick={this.handleUp.bind(this)} disabled={this.state.buttonDisabled}>
-                            <ContentAdd />
-                        </FloatingActionButton>
+            <div className="makeItCenter">
+                <Paper className="temperature" zDepth={5} circle={true} style={heatingStyle}>
+                    <div>
+                        <span>{this.state.currentTemp.toFixed(1)} °C</span>
                     </div>
-                    <div style={errorStyle}>{this.state.error}</div>
+                    <div className="setTo">
+                        <span>Set to: {this.state.setTemp.toFixed(1)} °C</span>
+                    </div>
+                </Paper>
+                <div style={{marginTop: 50}}>
+                    <FloatingActionButton style={marginRight} onClick={this.handleDown.bind(this)}
+                                          disabled={this.state.buttonDisabled}>
+                        <ContentRemove />
+                    </FloatingActionButton>
+                    <FloatingActionButton secondary={true} style={marginLeft} onClick={this.handleUp.bind(this)}
+                                          disabled={this.state.buttonDisabled}>
+                        <ContentAdd />
+                    </FloatingActionButton>
+                </div>
+                <div style={errorStyle}>{this.state.error}</div>
 
-                    <div style={{marginTop: 20}}>
-                        <Card>
-                            <CardText>
-                                <p>Current room temperature: <strong>{this.state.currentTemp.toFixed(1)} °C</strong></p>
-                                <p>Programmed temperature is: <strong>{this.state.setTemp.toFixed(1)} °C</strong></p>
-                                <p>Heating is: <strong>{this.state.heating}</strong></p>
-                                <p>Measured on <strong>{this.state.date.toDateString()}</strong> at&nbsp;
-                                    <strong>{this.state.date.toLocaleTimeString()}</strong></p>
-                            </CardText>
-                        </Card>
-                    </div>
+                <div style={{marginTop: 20}}>
+                    <Card>
+                        <CardText>
+                            <p>Current room temperature: <strong>{this.state.currentTemp.toFixed(1)} °C</strong></p>
+                            <p>Programmed temperature is: <strong>{this.state.setTemp.toFixed(1)} °C</strong></p>
+                            <p>Heating is: <strong>{this.state.heating}</strong></p>
+                            <p>Measured on <strong>{this.state.date.toDateString()}</strong> at&nbsp;
+                                <strong>{this.state.date.toLocaleTimeString()}</strong></p>
+                        </CardText>
+                    </Card>
                 </div>
             </div>
         );
@@ -180,6 +177,6 @@ class AppComponent extends React.Component {
 }
 
 
-AppComponent.defaultProps = {};
+HomeComponent.defaultProps = {};
 
-export default AppComponent;
+export default HomeComponent;

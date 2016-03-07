@@ -5,7 +5,6 @@ import io.vertx.core.eventbus.MessageCodec
 import io.vertx.core.json.JsonObject
 import java.time.Instant
 
-
 data class Temperature(val value: Float, val temperatureSet: Float, val heating: Boolean, val date: Instant = Instant.now()) {
     companion object {
 

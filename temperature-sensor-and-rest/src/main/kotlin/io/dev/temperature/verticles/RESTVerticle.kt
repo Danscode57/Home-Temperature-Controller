@@ -33,7 +33,8 @@ class RESTVerticle(val serverPort: Int = 8080) : AbstractVerticle() {
         router.get("/temp").produces("application/json").handler({ routingContext ->
             vertx.eventBus().send<Temperature>(BusAddresses.Repository.REPOSITORY_GET_OPERATIONS, GET_LATEST, { response ->
                 if (response.succeeded()) {
-                    routingContext.response().end(response.result().body().toJson())
+                    routingContext.response().putHeader("Content-Type", "application/json").
+                            end(response.result().body().toJson())
                 } else {
                     routingContext.response().setStatusCode(500).end()
                 }
@@ -64,6 +65,31 @@ class RESTVerticle(val serverPort: Int = 8080) : AbstractVerticle() {
                     routingContext.response().setStatusCode(500).end(error.encodePrettily())
                 } else {
                     routingContext.response().end(reply.result().body().encodePrettily())
+                }
+            })
+        })
+
+        router.get("/schedule").produces("application/json").handler({ routingContext ->
+            vertx.eventBus().send<JsonObject>(BusAddresses.Schedule.SCHEDULE_GET_CURRENT, JsonObject(), { resp ->
+                if (resp.succeeded()) {
+                    routingContext.response().putHeader("Content-Type", "application/json").
+                            end(resp.result()?.body()?.encodePrettily())
+                } else {
+                    routingContext.response().
+                            setStatusCode(500).
+                            end(JsonObject().put("error", resp.cause()).encodePrettily())
+                }
+            })
+        })
+
+        router.post("/schedule").consumes("application/json").handler({ routingContext ->
+            val scheduleRequest = routingContext.bodyAsJson
+            vertx.eventBus().send<JsonObject>(BusAddresses.Schedule.SCHEDULE_SAVE, scheduleRequest, { resp ->
+                if (resp.succeeded()) {
+                    routingContext.response().end()
+                } else {
+                    routingContext.response().setStatusCode(500).putHeader("Content-Type", "application/json").
+                            end(JsonObject().put("error", resp.cause()).encodePrettily())
                 }
             })
         })

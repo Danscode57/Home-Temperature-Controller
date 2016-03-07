@@ -13,6 +13,12 @@ object BusAddresses {
         const val REPOSITORY_GET_OPERATIONS: String = "/repository/operations"
         const val REPOSITORY_GET_ALL_OPERATIONS: String = "/repository/operations-get-all"
     }
+
+    object Schedule {
+        const val SCHEDULE_GET_CURRENT: String = "/schedule/get-current"
+        const val SCHEDULE_SAVE: String = "/schedule/save"
+        const val SCHEDULE_UPDATED: String = "/schedule/updated"
+    }
 }
 
 object RepositoryOperations {

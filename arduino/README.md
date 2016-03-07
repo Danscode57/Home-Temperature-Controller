@@ -1,6 +1,10 @@
 Arduino code and electronic Circuit
 ===================================
 
+Arduino module has 2 responsibilities: 
+
+* 
+
 
 The Elements that make the circuit for the Arduino controller contain:
 

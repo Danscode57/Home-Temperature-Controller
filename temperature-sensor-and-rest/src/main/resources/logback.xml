@@ -27,7 +27,7 @@
 
   </appender>
 
-  <logger name="io.dev.temperature" level="DEBUG">
+  <logger name="io.dev.temperature" level="INFO">
     <appender-ref ref="STDOUT" />
   </logger>
 

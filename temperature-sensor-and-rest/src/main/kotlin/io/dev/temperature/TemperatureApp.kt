@@ -17,10 +17,11 @@ class TemperatureApp : AbstractVerticle() {
     override fun start() {
         val serialPortConfig = config().getJsonObject("serialPort", JsonObject().put("path", "/tmp/foo"))
         val serialPortPath = serialPortConfig.getString("path", "/tmp/foo")
-
         vertx.eventBus().registerDefaultCodec(Temperature::class.java, TemperatureCodec())
 
         vertx.deployVerticle(MessageParsingVerticle())
+
+        vertx.deployVerticle(ScheduleVerticle())
 
         vertx.deployVerticle(InMemoryTemperatureRepository())
 

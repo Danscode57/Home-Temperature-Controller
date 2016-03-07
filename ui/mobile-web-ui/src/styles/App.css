@@ -1,22 +1,82 @@
 .makeItCenter {
-  text-align: center;
+    text-align: center;
 }
 
-
 .temperature {
-  height: 200px;
-  width: 200px;
-  margin: 20px;
-  text-align: center;
-  display: inline-block;
+    height: 200px;
+    width: 200px;
+    margin: 20px;
+    text-align: center;
+    display: inline-block;
 }
 
 .temperature div {
-  padding-top: 60px;
-  font-size: 3em;
+    padding-top: 60px;
+    font-size: 3em;
 }
 
 .temperature div.setTo {
-  padding-top: 10px;
-  font-size: 1em;
+    padding-top: 10px;
+    font-size: 1em;
+}
+
+.schedule {
+    margin-top: 0px;
+}
+
+.schedule .toggle {
+    padding: 20px;
+}
+
+.schedule .week {
+    padding: 20px;
+}
+
+.schedule .week .day {
+    padding: 5px;
+}
+
+.schedule .week .day .size {
+    max-width: 100px;
+    width: 45%;
+}
+
+.schedule .week .dayButtons {
+    background-color: #e1bee7;
+}
+
+.scheduleHourContainer {
+
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+}
+
+.scheduleHourItem {
+    order: 1;
+    flex-shrink: 1;
+    margin: auto;
+}
+
+
+.container {
+    padding-top: 20px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    align-content: space-between;
+}
+
+.item {
+    order: 1;
+    margin: auto;
+}
+
+.loading-container {
+    position: relative;
+}
+
+.loading-refresh {
+    display: inline-block;
+    position: relative;
 }
