@@ -13,6 +13,12 @@ export default function syncReducer(state = initialState, action){
             return R.assoc('fetchingSchedule', true)(state);
         case types.SCHEDULE_RECEIVE:
             return R.assoc('fetchingSchedule', false)(state);
+        case types.SCHEDULE_UPDATE_REQUEST:
+            return R.assoc('savingSchedule', true)(state);
+        case types.SCHEDULE_UPDATE_SUCCESS:
+            return R.assoc('savingSchedule', false)(state);
+        case types.SCHEDULE_UPDATE_FAILURE:
+            return R.assoc('savingSchedule', false)(state);
         default:
             return state;
     }

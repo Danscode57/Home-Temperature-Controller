@@ -2,7 +2,7 @@ require('normalize.css');
 require('styles/App.css');
 
 import R from 'ramda';
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Toggle from 'material-ui/lib/toggle';
 
 import FlatButton from 'material-ui/lib/flat-button';
@@ -51,7 +51,8 @@ class ScheduleComponent extends React.Component {
     }
 
     render() {
-        let { active, days } = this.props.schedule;
+        let { schedule } = this.props;
+        let { active, days } = schedule;
         let { actions, sync } = this.props;
 
         let scheduleContent = (
@@ -91,8 +92,8 @@ class ScheduleComponent extends React.Component {
                                     onToggle={()=>actions.toggleActive()}/>
                         </div>
                         <div className="item">
-                            <RaisedButton label="Save changes" primary={true} icon={<ContentSave />}
-                                          labelPosition="before"/>
+                            <RaisedButton label="Save changes" primary={true} icon={<ContentSave />} disabled={sync.savingSchedule}
+                                          labelPosition="before" onTouchTap={ e => actions.saveSchedule(schedule)} />
                         </div>
                     </div>
                 </div>
@@ -101,6 +102,9 @@ class ScheduleComponent extends React.Component {
         );
     }
 }
+
+ScheduleComponent.propTypes = {
+};
 
 function scheduleState(state) {
     return state;
