@@ -18,7 +18,7 @@ export default function syncReducer(state = initialState, action){
             return R.assoc('savingSchedule', true)(state);
         case types.SCHEDULE_UPDATE_SUCCESS:
         case types.SCHEDULE_UPDATE_FAILURE:
-            return R.assoc('scheduleChanged', false)(R.assoc('savingSchedule', false))(state);
+            return R.assoc('scheduleChanged', false)(R.assoc('savingSchedule', false)(state));
         case types.DAY_SCHEDULE_ADD_HOUR:
         case types.DAY_SCHEDULE_COPY:
         case types.DAY_SCHEDULE_REMOVE_HOUR:

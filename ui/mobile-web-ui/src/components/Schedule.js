@@ -2,7 +2,7 @@ require('normalize.css');
 require('styles/App.css');
 
 import R from 'ramda';
-import React, {PropTypes} from 'react';
+import React from 'react';
 import Toggle from 'material-ui/lib/toggle';
 
 import FlatButton from 'material-ui/lib/flat-button';
@@ -11,6 +11,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import ContentSave from 'material-ui/lib/svg-icons/content/save';
 import DeviceAccessTime from 'material-ui/lib/svg-icons/device/access-time';
 import RefreshIndicator from 'material-ui/lib/refresh-indicator';
+import LinearProgress from 'material-ui/lib/linear-progress';
 
 
 import {amber500, blue50} from 'material-ui/lib/styles/colors';
@@ -83,6 +84,10 @@ class ScheduleComponent extends React.Component {
                     </div>
                 </div>);
         }
+        let saveProgress;
+        if (sync.savingSchedule){
+            saveProgress = (<LinearProgress mode="indeterminate" />);
+        }
         return (
             <div className="schedule">
                 <div className="toggle">
@@ -94,17 +99,17 @@ class ScheduleComponent extends React.Component {
                         <div className="item">
                             <RaisedButton label="Save changes" primary={true} icon={<ContentSave />}
                                           disabled={sync.savingSchedule || !sync.scheduleChanged}
-                                          labelPosition="before" onTouchTap={ e => actions.saveSchedule(schedule)}/>
+                                          labelPosition="before" onTouchTap={ () => actions.saveSchedule(schedule)}/>
                         </div>
                     </div>
                 </div>
+                {saveProgress}
+
                 {scheduleContent}
             </div>
         );
     }
 }
-
-ScheduleComponent.propTypes = {};
 
 function scheduleState(state) {
     return state;
