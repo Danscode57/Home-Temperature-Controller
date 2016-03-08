@@ -3,8 +3,8 @@
   "days" : [ {
     "name" : "Mon",
     "hours" : [ {
-      "temp" : 20.5,
-      "time" : "15:30"
+      "temp" : 20,
+      "time" : "13:30"
     }, {
       "temp" : 19.5,
       "time" : "23:00"
@@ -50,7 +50,13 @@
     } ]
   }, {
     "name" : "Fri",
-    "hours" : [ ]
+    "hours" : [ {
+      "temp" : 19.5,
+      "time" : "15:30"
+    }, {
+      "temp" : 18.5,
+      "time" : "23:59"
+    } ]
   }, {
     "name" : "Sat",
     "hours" : [ ]
