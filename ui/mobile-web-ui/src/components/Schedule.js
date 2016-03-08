@@ -92,8 +92,9 @@ class ScheduleComponent extends React.Component {
                                     onToggle={()=>actions.toggleActive()}/>
                         </div>
                         <div className="item">
-                            <RaisedButton label="Save changes" primary={true} icon={<ContentSave />} disabled={sync.savingSchedule}
-                                          labelPosition="before" onTouchTap={ e => actions.saveSchedule(schedule)} />
+                            <RaisedButton label="Save changes" primary={true} icon={<ContentSave />}
+                                          disabled={sync.savingSchedule || !sync.scheduleChanged}
+                                          labelPosition="before" onTouchTap={ e => actions.saveSchedule(schedule)}/>
                         </div>
                     </div>
                 </div>
@@ -103,8 +104,7 @@ class ScheduleComponent extends React.Component {
     }
 }
 
-ScheduleComponent.propTypes = {
-};
+ScheduleComponent.propTypes = {};
 
 function scheduleState(state) {
     return state;

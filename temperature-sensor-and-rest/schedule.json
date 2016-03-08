@@ -3,7 +3,7 @@
   "days" : [ {
     "name" : "Mon",
     "hours" : [ {
-      "temp" : 20.5,
+      "temp" : 20,
       "time" : "15:30"
     }, {
       "temp" : 19.5,
