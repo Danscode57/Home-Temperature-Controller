@@ -8,7 +8,9 @@ import { Card, CardText } from 'material-ui/lib/card';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 import ContentRemove from 'material-ui/lib/svg-icons/content/remove';
-import {blue500, amber500, red500} from 'material-ui/lib/styles/colors';
+import ActionSchedule from 'material-ui/lib/svg-icons/action/schedule';
+
+import {blue500, amber500, red500, grey100} from 'material-ui/lib/styles/colors';
 
 class HomeComponent extends React.Component {
 
@@ -22,15 +24,21 @@ class HomeComponent extends React.Component {
             date: new Date(),
             heating: 'off',
             program: undefined,
-            fromServer: {},
+            activeSchedule: grey100,
+            activeScheduleOn: 'off',
+            nextTemperature: {temp: 0, time: 'never'},
             error: '',
             buttonDisabled: false
         };
     }
 
     getTempUrl() {
-        //return 'http://' + window.location.hostname + ':8080/temp';
-        return 'http://192.168.1.84:8080/temp';
+        return 'http://' + window.location.hostname + ':8080/temp';
+    }
+
+    getStatusUrl() {
+        return 'http://' + window.location.hostname + ':8080/status';
+
     }
 
     handleError(error) {
@@ -43,23 +51,26 @@ class HomeComponent extends React.Component {
     updateTemperatureReading() {
         let self = this;
 
-        fetch(this.getTempUrl()).then(function (response) {
+        fetch(this.getStatusUrl()).then(function (response) {
             if (response.status != 200) {
                 throw new Error(response.statusText);
             }
             return response.json();
         }).then(function (json) {
-            let currentTemp = parseFloat(json.value);
-            let setTemp = parseFloat(json.setTemp);
-            let heating = json.heating ? 'on' : 'off';
-            let date = new Date(Date.parse(json.date));
+
+            let currentTemp = parseFloat(json.temperature.value);
+            let setTemp = parseFloat(json.temperature.setTemp);
+            let heating = json.temperature.heating ? 'on' : 'off';
+            let date = new Date(Date.parse(json.temperature.date));
 
             self.setState({
                 currentTemp: currentTemp,
                 setTemp: setTemp,
-                fromServer: json,
                 heating: heating,
                 date: date,
+                activeSchedule: json.scheduleActive ? red500 : grey100,
+                activeScheduleOn: json.scheduleActive ? 'on' : 'off',
+                nextTemperature: json.nextTemperature,
                 error: '',
                 buttonDisabled: false
             });
@@ -153,6 +164,7 @@ class HomeComponent extends React.Component {
                                           disabled={this.state.buttonDisabled}>
                         <ContentRemove />
                     </FloatingActionButton>
+                    <ActionSchedule color={this.state.activeSchedule} />
                     <FloatingActionButton secondary={true} style={marginLeft} onClick={this.handleUp.bind(this)}
                                           disabled={this.state.buttonDisabled}>
                         <ContentAdd />
@@ -163,10 +175,11 @@ class HomeComponent extends React.Component {
                 <div style={{marginTop: 20}}>
                     <Card>
                         <CardText>
-                            <p>Current room temperature: <strong>{this.state.currentTemp.toFixed(1)} °C</strong></p>
-                            <p>Programmed temperature is: <strong>{this.state.setTemp.toFixed(1)} °C</strong></p>
-                            <p>Heating is: <strong>{this.state.heating}</strong></p>
-                            <p>Measured on <strong>{this.state.date.toDateString()}</strong> at&nbsp;
+                            <p>Current : <strong>{this.state.currentTemp.toFixed(1)} °C</strong> Programmed : <strong>{this.state.setTemp.toFixed(1)} °C</strong></p>
+                            <p>Heating : <strong>{this.state.heating}</strong> Schedule : <strong>{this.state.activeScheduleOn}</strong></p>
+                            <p>Scheduled temperature of <strong>{this.state.nextTemperature.temp} °C</strong> on
+                                &nbsp;<strong>{this.state.nextTemperature.time}</strong></p>
+                            <p><strong>{this.state.date.toDateString()}</strong> at&nbsp;
                                 <strong>{this.state.date.toLocaleTimeString()}</strong></p>
                         </CardText>
                     </Card>

@@ -26,6 +26,7 @@ let reducers = combineReducers({
     sync: syncReducer
 });
 
+//let store = createStore(reducers, applyMiddleware(thunkMiddleware));
 let store = createStore(reducers, applyMiddleware(logger, thunkMiddleware));
 
 injectTapEventPlugin();

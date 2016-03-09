@@ -18,6 +18,7 @@ object BusAddresses {
         const val SCHEDULE_GET_CURRENT: String = "/schedule/get-current"
         const val SCHEDULE_SAVE: String = "/schedule/save"
         const val SCHEDULE_UPDATED: String = "/schedule/updated"
+        const val SCHEDULE_GET_NEXT_UPDATE: String = "/schedule/get-next-update"
     }
 }
 

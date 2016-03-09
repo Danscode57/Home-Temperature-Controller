@@ -68,6 +68,10 @@ class ScheduleVerticle(val scheduleFilePath: String = "./schedule.json") : Abstr
             vertx.eventBus().publish(BusAddresses.Schedule.SCHEDULE_UPDATED, currentSchedule)
         })
 
+        vertx.eventBus().consumer<JsonObject>(BusAddresses.Schedule.SCHEDULE_GET_NEXT_UPDATE, { message ->
+            message.reply(nextTemperatureSetup?.toJson())
+        })
+
         vertx.eventBus().consumer<JsonObject>(BusAddresses.Schedule.SCHEDULE_UPDATED, { message ->
             val newSchedule = message.body()
             if (scheduleFile == null) {
@@ -80,6 +84,7 @@ class ScheduleVerticle(val scheduleFilePath: String = "./schedule.json") : Abstr
                 log.info("Canceling previously scheduled temperature setup")
                 vertx.cancelTimer(currentTimer)
                 currentTimer = 0
+                nextTemperatureSetup = null
             }
 
             if (shouldScheduleNextJob(currentSchedule)) {
@@ -90,13 +95,15 @@ class ScheduleVerticle(val scheduleFilePath: String = "./schedule.json") : Abstr
 
         if (shouldScheduleNextJob(currentSchedule)) {
             currentTimer = scheduleNextJob(currentSchedule, vertx)
+        } else {
+            log.info("There is no Active schedule at the moment.")
         }
 
         log.info("Started Schedule verticle")
     }
 
     private fun shouldScheduleNextJob(schedule: JsonObject?): Boolean {
-        return (schedule != null && schedule.getBoolean("active"))
+        return (schedule != null && schedule.getBoolean("active", false))
     }
 
     private fun scheduleNextJob(scheduleJson: JsonObject?, vertx: Vertx): Long {

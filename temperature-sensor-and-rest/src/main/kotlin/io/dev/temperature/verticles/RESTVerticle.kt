@@ -4,13 +4,19 @@ import io.dev.temperature.BusAddresses
 import io.dev.temperature.RepositoryOperations.GET_LATEST
 import io.dev.temperature.model.Temperature
 import io.vertx.core.AbstractVerticle
+import io.vertx.core.Vertx
 import io.vertx.core.http.HttpMethod
+import io.vertx.core.http.HttpServerResponse
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.Router
+import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.ext.web.handler.CorsHandler
 import org.slf4j.LoggerFactory
+import java.lang.management.ManagementFactory
+import java.time.Instant
+import java.time.LocalDateTime
 
 class RESTVerticle(val serverPort: Int = 8080) : AbstractVerticle() {
 
@@ -95,10 +101,42 @@ class RESTVerticle(val serverPort: Int = 8080) : AbstractVerticle() {
         })
 
         router.get("/status").produces("application/json").handler({ routingContext ->
-            //TODO: Fill with code, oh yes! System status messages!
+            sendSystemStatus(vertx, routingContext.response())
         })
 
         server.requestHandler { router.accept(it) }
         server.listen(serverPort)
+    }
+
+    private fun sendSystemStatus(vertx: Vertx, httpResponse: HttpServerResponse) {
+        vertx.eventBus().send<Temperature>(BusAddresses.Repository.REPOSITORY_GET_OPERATIONS, GET_LATEST, { response ->
+
+            val temperature = response.result().body().toJsonObject()
+
+            vertx.eventBus().send<JsonObject>(BusAddresses.Schedule.SCHEDULE_GET_NEXT_UPDATE, JsonObject(), { resp ->
+
+                val scheduledResponse = resp.result().body()
+                val scheduleActive = scheduledResponse != null
+                val nextTemperatureSetup = scheduledResponse ?: JsonObject()
+
+                val jvmStats = jvmStatsAsJson()
+
+                httpResponse.putHeader("Content-Type", "application/json")
+                        .end(JsonObject()
+                                .put("temperature", temperature)
+                                .put("scheduleActive", scheduleActive)
+                                .put("nextTemperature", nextTemperatureSetup)
+                                .put("systemStats", jvmStats)
+                                .encodePrettily())
+            })
+        })
+    }
+
+    private fun jvmStatsAsJson(): JsonObject {
+        val runtimeMXBean = ManagementFactory.getRuntimeMXBean()
+        val runtime = Runtime.getRuntime()
+        return JsonObject()
+                .put("startTime", Instant.ofEpochMilli(runtimeMXBean?.startTime!!).toString())
+                .put("memoryUsed", runtime?.totalMemory())
     }
 }

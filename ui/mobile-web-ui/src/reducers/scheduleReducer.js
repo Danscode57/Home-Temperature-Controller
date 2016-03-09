@@ -44,7 +44,7 @@ function addHourSchedule(state, day) {
 
     if (dayState.hours.length > 0) {
         let lastHour = R.last(dayState.hours);
-        newHour = {time: lastHour.time, temp: 18.5};
+        newHour = {time: R.clone(lastHour.time), temp: 18.5};
     }
     dayState.hours.push(newHour);
 

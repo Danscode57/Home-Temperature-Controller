@@ -57,7 +57,7 @@ class HourComponent extends Component {
 
                 <Slider step={0.5} defaultValue={temp} min={15} max={23} ref="tempSlider"
                         onDragStart={() => this.setState(R.assoc('dragStarted', true)(this.state))}
-                        onDragStop={ (e) => this.handleDragStop(actions.updateTemp, day, index)}
+                        onDragStop={ () => this.handleDragStop(actions.updateTemp, day, index)}
                         onChange={(e,v) => this.handleOnChange(actions.updateTemp, day, index, v)}/>
 
             </div>

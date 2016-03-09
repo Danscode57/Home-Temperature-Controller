@@ -6,6 +6,7 @@ import io.vertx.core.json.JsonObject
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 data class Temperature(val value: Float, val temperatureSet: Float, val heating: Boolean, val date: Instant = Instant.now()) {
     companion object {
@@ -67,7 +68,7 @@ data class Schedule(val active: Boolean = false, val days: List<ScheduleDay>) {
 
         val nextPossibleSchedule = mappedRestOfTheWeek.find { it.time.isAfter(dateTime) }
 
-        if (nextPossibleSchedule == null){
+        if (nextPossibleSchedule == null) {
             val nextWeeksDate = dateOfNextWeekMonday(dateTime)
             return flattenListOfScheduledHoursOfDays(nextWeeksDate, days).first()
         }
@@ -97,7 +98,13 @@ data class ScheduleHour(val time: LocalTime, val temp: Float) {
     }
 }
 
-data class NextScheduledTemp(val time: LocalDateTime, val temp: Float)
+data class NextScheduledTemp(val time: LocalDateTime, val temp: Float) {
+    fun toJson(): JsonObject {
+        return JsonObject()
+                .put("time", time.format(DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm")))
+                .put("temp", temp)
+    }
+}
 
 class TemperatureCodec : MessageCodec<Temperature, Temperature> {
     override fun systemCodecID(): Byte {
