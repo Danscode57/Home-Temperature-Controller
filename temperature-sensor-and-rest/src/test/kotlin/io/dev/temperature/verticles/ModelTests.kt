@@ -3,12 +3,15 @@ package io.dev.temperature.verticles
 import io.dev.temperature.model.*
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
+import org.junit.Assert
 import org.junit.Test
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.Month
+import java.time.temporal.ChronoUnit
+import java.time.temporal.TemporalUnit
 import kotlin.reflect.KFunction0
 
 
@@ -73,7 +76,7 @@ class ModelTests {
         assertEquals(NextScheduledTemp(LocalDateTime.of(2016, Month.MARCH, 7, 20, 10), 19.5f), nextScheduledTemp)
     }
 
-    @Test fun shouldReturnNextScheduleTemperatureFromNextDay(){
+    @Test fun shouldReturnNextScheduleTemperatureFromNextDay() {
         val hours = listOf(
                 ScheduleHour(LocalTime.of(11, 20), 20f),
                 ScheduleHour(LocalTime.of(20, 10), 19.5f))
@@ -86,7 +89,21 @@ class ModelTests {
         assertEquals(NextScheduledTemp(LocalDateTime.of(2016, Month.MARCH, 8, 11, 20), 20f), nextScheduledTemp)
     }
 
-    @Test fun shouldReturnNextWeeksFirstScheduledTemperature(){
+    @Test fun shouldReturnNextWeeksFirstScheduledTemperature() {
+        val hours = listOf(
+                ScheduleHour(LocalTime.of(11, 20), 20f),
+                ScheduleHour(LocalTime.of(20, 10), 19.5f))
+        val days = listOf(ScheduleDay("Mon", hours), ScheduleDay("Tue", hours))
+
+        val schedule = Schedule(true, days)
+
+        val nextScheduledTemp = schedule.nextScheduledTemp(LocalDateTime.of(2016, Month.MARCH, 8, 21, 0))
+
+        assertEquals(NextScheduledTemp(LocalDateTime.of(2016, Month.MARCH, 14, 11, 20), 20f), nextScheduledTemp)
+    }
+
+
+    @Test fun shouldReturnNullIfThereIsNoHoursSetupInSchedule() {
         val hours = emptyList<ScheduleHour>()
 
         val days = listOf(ScheduleDay("Mon", hours), ScheduleDay("Tue", hours))
@@ -98,9 +115,11 @@ class ModelTests {
     }
 
 
-    @Test fun shouldReturnNullIfThereIsNoHoursSetupInSchedule(){
+    @Test fun shouldFoo() {
+        val a = LocalDateTime.of(2010, Month.MARCH, 7, 11, 10)
+        val b = LocalDateTime.of(2010, Month.MARCH, 7, 11, 15)
 
+        println(a.until(b, ChronoUnit.SECONDS))
     }
-
 }
 

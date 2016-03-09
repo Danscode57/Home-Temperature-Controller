@@ -1,6 +1,8 @@
 package io.dev.temperature.verticles
 
 import io.dev.temperature.BusAddresses
+import io.dev.temperature.model.NextScheduledTemp
+import io.dev.temperature.model.Schedule
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Vertx
 import io.vertx.core.json.JsonArray
@@ -8,8 +10,8 @@ import io.vertx.core.json.JsonObject
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.time.Instant
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 class ScheduleVerticle(val scheduleFilePath: String = "./schedule.json") : AbstractVerticle() {
 
@@ -44,6 +46,7 @@ class ScheduleVerticle(val scheduleFilePath: String = "./schedule.json") : Abstr
     var currentSchedule: JsonObject? = null
     var scheduleFile: File? = null
     var currentTimer: Long = 0
+    var nextTemperatureSetup: NextScheduledTemp? = null
 
     override fun start() {
         scheduleFile = File(scheduleFilePath)
@@ -72,28 +75,48 @@ class ScheduleVerticle(val scheduleFilePath: String = "./schedule.json") : Abstr
             }
             scheduleFile!!.writeText(newSchedule.encodePrettily())
             log.info("Saved new Schedule to file [${scheduleFile?.absolutePath}]")
+
+            if (!currentTimer.equals(0)) {
+                log.info("Canceling previously scheduled temperature setup")
+                vertx.cancelTimer(currentTimer)
+                currentTimer = 0
+            }
+
+            if (shouldScheduleNextJob(currentSchedule)) {
+                currentTimer = scheduleNextJob(currentSchedule, vertx)
+            }
+
         })
 
-
+        if (shouldScheduleNextJob(currentSchedule)) {
+            currentTimer = scheduleNextJob(currentSchedule, vertx)
+        }
 
         log.info("Started Schedule verticle")
     }
 
-    private fun shouldScheduleNextJob(schedule: JsonObject): Boolean {
-        return schedule.getBoolean("active")
+    private fun shouldScheduleNextJob(schedule: JsonObject?): Boolean {
+        return (schedule != null && schedule.getBoolean("active"))
     }
 
-    private fun scheduleNextJob(schedule: JsonObject, vertx: Vertx): Long {
-
-        return 0;
-    }
-
-    private fun getNextTemperatureSetup(schedule: JsonObject): Float {
+    private fun scheduleNextJob(scheduleJson: JsonObject?, vertx: Vertx): Long {
+        val schedule = Schedule.fromJson(scheduleJson!!)
         val now = LocalDateTime.now()
-        val currentDayIndex = now.dayOfWeek.value - 1
+        val nextScheduledTemp = schedule.nextScheduledTemp(now) ?: return 0
+        nextTemperatureSetup = nextScheduledTemp
 
-        val jsonObject = schedule.getJsonArray("days").getJsonObject(currentDayIndex)
+        val delay = now.until(nextScheduledTemp.time, ChronoUnit.MILLIS)
 
-        return 0f;
+        log.info("Scheduling next temperature setup [${nextScheduledTemp}]")
+
+        return vertx.setTimer(delay, {
+            vertx.eventBus().send<Float>(BusAddresses.Serial.SET_TEMPERATURE_IN_ARDUINO, nextScheduledTemp.temp, { responseMessage ->
+                if (responseMessage.failed()) {
+                    log.error("Unable to send new temperature setup", responseMessage.cause())
+                }
+                currentTimer = scheduleNextJob(currentSchedule, vertx)
+            })
+        })
     }
+
 }

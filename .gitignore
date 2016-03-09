@@ -10,3 +10,4 @@
 **/node_modules/
 **/.gradle/
 **/dist/
+temperature-sensor-and-rest/schedule.json
