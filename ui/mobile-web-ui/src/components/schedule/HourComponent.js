@@ -38,7 +38,6 @@ class HourComponent extends Component {
         let time = hour.time;
         let defaultTime = new Date(Date.parse('1979-10-10 ' + time));
 
-
         return (
             <div>
                 <div className="scheduleHourContainer">
