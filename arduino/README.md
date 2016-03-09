@@ -8,13 +8,6 @@ Arduino module has 2 responsibilities:
 * Switch the Relay on/off depending on the temperature set and temperature read.
 
 
-The Elements that make the circuit for the Arduino controller contain:
-
-* Digital Thermometer, I'm using (TODO: put a part number in here)
-* 220V AC relay, I'm using (TODO:)
-* A couple of resistors
-* LED indicating when heating is switched on/off 
-
 ## The circuit
 
 !["Hand drawn circuit"][1]
