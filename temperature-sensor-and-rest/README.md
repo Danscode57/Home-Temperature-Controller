@@ -23,5 +23,40 @@ Main entry point to the application is via **TemperatureApp** class. It starts a
 * SerialPortTemperatureVerticle - registers itself as a listener on specified serial port (Arduino USB connection). 
 It receives temperature updates from Arduino and sends control message with temperature to set to it.
 
-## Running the Main class
-Need to point to JNI library -Djava.library.path={LOCATION}
+## Building the binaries
+
+Project uses Gradle to build fat jar file. To build the project run:
+
+        ./gradlew clean shadowJar
+
+Build jar will be located in **build/libs/** folder.
+
+There is also a task that packs binaries, scripts and config files into a single zip.
+
+        ./gradlew clean prepareDist
+        
+Prepared zip file will be located in **build/dist/** folder.
+
+## Running the app
+
+[SerialPort verticle][1] is using RXTX Java Library which requires JNI library. On Mac, I'm using the one in [libs][./libs] folder.
+
+On Raspberry Pi I installed the JNI with command:
+
+        sudo apt-get -y install rxtx-jni
+
+
+You should be able to run the [start_service.sh][1] script that starts the service.
+
+Alternatively you can run the following from the command line:
+
+        JAR_FILE=temperature-sensor-and-rest-1.0.0-SNAPSHOT-fat.jar
+        JNI_LOCATION=/usr/lib/jni
+        CONFIG_FILE=prod.json
+        java -Djava.library.path=$JNI_LOCATION -jar $JAR_FILE  -conf $CONFIG_FILE
+
+
+You can try to stop the service with [stop_service.sh][2] script :)
+
+[1]: scripts/start_service.sh
+[2]: scripts/stop_service.sh
