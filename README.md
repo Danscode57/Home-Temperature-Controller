@@ -37,6 +37,10 @@ More detailed description in the [UI][10] folder.
 
 !["Image of Schedule"][3] !["Image of Home Screen"][2]
 
+## Contributions
+
+All welcome.
+
 ----
 
 
