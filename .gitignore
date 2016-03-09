@@ -10,6 +10,7 @@
 **/node_modules/
 **/.gradle/
 **/dist/
+**/site.tgz
 temperature-sensor-and-rest/schedule.json
 
 temperature-sensor-and-rest/scripts/*.service
