@@ -58,5 +58,14 @@ Alternatively you can run the following from the command line:
 
 You can try to stop the service with [stop_service.sh][2] script :)
 
+## Local dev with serial port
+
+I used socat command to simulate Arduino on my Mac for development and testing. You can lunch something line:
+
+        
+       → sudo socat -d -d -d pty,raw,echo=0,mode=666,link=/tmp/foo -
+
+and use /tmp/foo as the serial port device path.
+
 [1]: scripts/start_service.sh
 [2]: scripts/stop_service.sh
