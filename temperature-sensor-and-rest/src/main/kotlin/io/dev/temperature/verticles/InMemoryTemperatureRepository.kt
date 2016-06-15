@@ -16,11 +16,11 @@ class InMemoryTemperatureRepository : AbstractVerticle() {
     override fun start() {
         log.info("Starting InMemoryRepository")
 
-        vertx.eventBus().consumer<Temperature>(BusAddresses.Serial.TEMPERATURE_MESSAGE_PARSED, {
+        vertx.eventBus().consumer<Temperature>(BusAddresses.Serial.TEMPERATURE_MESSAGE_PARSED) {
             save(it.body())
-        })
+        }
 
-        vertx.eventBus().consumer<String>(BusAddresses.Repository.REPOSITORY_GET_OPERATIONS, { message ->
+        vertx.eventBus().consumer<String>(BusAddresses.Repository.REPOSITORY_GET_OPERATIONS) { message ->
             when (message.body()) {
                 null -> log.error("Repository got null request, WTF!")
                 GET_LATEST -> {
@@ -28,10 +28,10 @@ class InMemoryTemperatureRepository : AbstractVerticle() {
                 }
                 else -> log.error("I received strange request ${message.body()} I don't know how to deal with")
             }
-        })
+        }
     }
 
-     fun save(temperature: Temperature): Temperature {
+    fun save(temperature: Temperature): Temperature {
         currentReading = temperature
         return currentReading
     }
