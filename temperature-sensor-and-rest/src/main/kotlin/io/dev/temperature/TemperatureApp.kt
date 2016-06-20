@@ -45,6 +45,7 @@ class TemperatureApp : AbstractVerticle() {
         val deploymentOptionsoptions = DeploymentOptions().setWorker(true)
 
         vertx.deployVerticle(SQLTemperatureRepository(), deploymentOptionsoptions)
+
     }
 }
 

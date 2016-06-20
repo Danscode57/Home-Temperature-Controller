@@ -9,6 +9,11 @@ object BusAddresses {
         const val SET_TEMPERATURE_IN_ARDUINO: String = "/temperature/set-in-arduino"
     }
 
+    object TemperatureReadings {
+        const val TEMPERATUR_READING_RECEIVED: String = "/temperature/received"
+        const val TEMPERATURE_SENSOR_READING_FAILED: String = "/temperature/sensor_failed"
+    }
+
     object Repository {
         const val REPOSITORY_GET_OPERATIONS: String = "/repository/operations"
         const val REPOSITORY_GET_ALL_OPERATIONS: String = "/repository/operations-get-all"

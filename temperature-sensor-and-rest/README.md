@@ -67,5 +67,14 @@ I used socat command to simulate Arduino on my Mac for development and testing. 
 
 and use /tmp/foo as the serial port device path.
 
+
+## PI hardware hacks
+
+Need to place the bellow in the /boot/config.txt
+
+    dtoverlay=w1-gpio
+
+
+
 [1]: scripts/start_service.sh
 [2]: scripts/stop_service.sh
