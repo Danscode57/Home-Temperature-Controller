@@ -117,7 +117,7 @@ class ScheduleVerticle(val scheduleFilePath: String = "./schedule.json") : Abstr
         log.info("Scheduling next temperature setup [${nextScheduledTemp}]")
 
         return vertx.setTimer(delay, {
-            vertx.eventBus().send<Float>(BusAddresses.Serial.SET_TEMPERATURE_IN_ARDUINO, nextScheduledTemp.temp, { responseMessage ->
+            vertx.eventBus().send<Float>(BusAddresses.TemperatureControl.SET_TEMPERATURE, nextScheduledTemp.temp, { responseMessage ->
                 if (responseMessage.failed()) {
                     log.error("Unable to send new temperature setup", responseMessage.cause())
                 }

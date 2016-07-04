@@ -8,14 +8,19 @@ import io.vertx.core.Vertx
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.jdbc.JDBCClient
 import io.vertx.ext.unit.TestContext
+import io.vertx.ext.unit.junit.RunTestOnContext
 import io.vertx.ext.unit.junit.VertxUnitRunner
 import org.junit.BeforeClass
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
 
 @RunWith(VertxUnitRunner::class)
 class SQLTemperatureRepositoryTest {
+
+    @Rule
+    var rule: RunTestOnContext = RunTestOnContext()
 
     companion object {
         const val TEST_DB_NAME = "temperature.test.db"
@@ -50,7 +55,7 @@ class SQLTemperatureRepositoryTest {
         val savedTemperature = Temperature(10.0f, 11.5f, false)
         val waitingForPersisingInDb = context.async()
 
-        vertx.eventBus().publish(BusAddresses.Serial.TEMPERATURE_MESSAGE_PARSED, savedTemperature)
+        vertx.eventBus().publish(BusAddresses.TemperatureReadings.VALID_TEMPERATURE_READING_RECEIVED, savedTemperature)
         jdbcClient?.getConnection { res ->
             val sqlConnection = res.result()
             sqlConnection.query("select * from TEMPERATURE", { queryResult ->

@@ -115,7 +115,7 @@ class TemperatureCodec : MessageCodec<Temperature, Temperature> {
     val jsonCodec: JsonObjectMessageCodec = JsonObjectMessageCodec()
 
     override fun systemCodecID(): Byte {
-        return 101
+        return -1
     }
 
     override fun name(): String? {

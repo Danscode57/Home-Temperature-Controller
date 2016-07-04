@@ -2,13 +2,6 @@ package io.dev.temperature
 
 object BusAddresses {
 
-    object Serial {
-        const val COMMUNICATION_RECEIVED: String = "/serialport/received"
-        const val TEMPERATURE_SET_CONFIRMED: String = "/serialport/temperature-set-confirmed"
-        const val TEMPERATURE_MESSAGE_PARSED: String = "/temperature/message-parsed"
-        const val SET_TEMPERATURE_IN_ARDUINO: String = "/temperature/set-in-arduino"
-    }
-
     object TemperatureControl {
         const val SET_TEMPERATURE: String = "/control/set-temperature"
         const val SWITCHED_HEATING_ON: String = "/control/switched-heating-on"
@@ -16,8 +9,8 @@ object BusAddresses {
     }
 
     object TemperatureReadings {
-        const val TEMPERATUR_READING_RECEIVED: String = "/temperature/received"
-        const val VALID_TEMPERATUR_READING_RECEIVED: String = "/temperature/received-valid"
+        const val TEMPERATURE_READING_RECEIVED: String = "/temperature/received"
+        const val VALID_TEMPERATURE_READING_RECEIVED: String = "/temperature/received-valid"
         const val TEMPERATURE_SENSOR_READING_FAILED: String = "/temperature/sensor_failed"
     }
 

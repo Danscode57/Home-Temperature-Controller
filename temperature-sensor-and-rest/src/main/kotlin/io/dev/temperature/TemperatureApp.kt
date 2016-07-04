@@ -15,34 +15,25 @@ import kotlin.system.exitProcess
 class TemperatureApp : AbstractVerticle() {
 
     override fun start() {
-        val serialPortConfig = config().getJsonObject("serialPort", JsonObject().put("path", "/tmp/foo"))
-        val serialPortPath = serialPortConfig.getString("path", "/tmp/foo")
-        vertx.eventBus().registerDefaultCodec(Temperature::class.java, TemperatureCodec())
+        val deploymentOptionsoptions = DeploymentOptions().setWorker(true)
 
-        vertx.deployVerticle(MessageParsingVerticle())
+        vertx.eventBus().registerDefaultCodec(Temperature::class.java, TemperatureCodec())
 
         vertx.deployVerticle(ScheduleVerticle())
 
         vertx.deployVerticle(InMemoryTemperatureRepository())
 
-        vertx.deployVerticle(SerialPortTemperatureVerticle(serialPortPath), {
-            when (it.succeeded()) {
-                true -> {
-                    vertx.deployVerticle(RESTVerticle(), {
-                        if (it.failed()) {
-                            log.error("Failed to start REST Verticle", it.cause())
-                            exitProcess(-3)
-                        }
-                    })
-                }
-                false -> {
-                    log.error("Unable to start Serial Port Verticle :(", it.cause())
-                    exitProcess(-2)
-                }
+        vertx.deployVerticle(TemperatureReadingVerticle("./tmp"))
 
+        vertx.deployVerticle(TemperatureController())
+
+        vertx.deployVerticle(RESTVerticle(), {
+            if (it.failed()) {
+                log.error("Failed to start REST Verticle", it.cause())
+                exitProcess(-3)
             }
         })
-        val deploymentOptionsoptions = DeploymentOptions().setWorker(true)
+
 
         vertx.deployVerticle(SQLTemperatureRepository(), deploymentOptionsoptions)
 

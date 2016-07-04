@@ -35,7 +35,7 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
 
     override fun start() {
 
-        vertx.eventBus().consumer<JsonObject>(BusAddresses.TemperatureReadings.TEMPERATUR_READING_RECEIVED) { message ->
+        vertx.eventBus().consumer<JsonObject>(BusAddresses.TemperatureReadings.TEMPERATURE_READING_RECEIVED) { message ->
             val jsonObject = message.body()
             if (jsonObject != null) {
                 val temperature = jsonObject.getFloat("temperature")
@@ -56,7 +56,7 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
             }
         }
 
-        vertx.eventBus().consumer<Temperature>(BusAddresses.TemperatureReadings.VALID_TEMPERATUR_READING_RECEIVED) { message ->
+        vertx.eventBus().consumer<Temperature>(BusAddresses.TemperatureReadings.VALID_TEMPERATURE_READING_RECEIVED) { message ->
             if (message.body() != null) {
                 if (shouldSwitchHeatingOn()) {
                     switchHeatingOn()
@@ -77,7 +77,7 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
             lastTemperatureReadingTime = timeNow.toEpochMilli()
             val temperatureEntity = Temperature(lastTemperatureReading, setTemperature, heatingOn, timeNow)
 
-            vertx.eventBus().publish(BusAddresses.TemperatureReadings.VALID_TEMPERATUR_READING_RECEIVED, temperatureEntity)
+            vertx.eventBus().publish(BusAddresses.TemperatureReadings.VALID_TEMPERATURE_READING_RECEIVED, temperatureEntity)
         }
     }
 
@@ -92,6 +92,7 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
             gpioController.high(indicatorPin)
             heatingOn = true
         }
+        vertx.eventBus().publish(BusAddresses.TemperatureControl.SWITCHED_HEATING_ON, Temperature(lastTemperatureReading, setTemperature, heatingOn))
     }
 
     fun switchHeatingOff() {
@@ -100,6 +101,7 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
             gpioController.low(indicatorPin)
             heatingOn = false
         }
+        vertx.eventBus().publish(BusAddresses.TemperatureControl.SWITCHED_HEATING_OFF, Temperature(lastTemperatureReading, setTemperature, heatingOn))
     }
 
 }

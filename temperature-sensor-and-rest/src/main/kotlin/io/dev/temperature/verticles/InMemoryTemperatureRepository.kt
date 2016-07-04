@@ -16,7 +16,15 @@ class InMemoryTemperatureRepository : AbstractVerticle() {
     override fun start() {
         log.info("Starting InMemoryRepository")
 
-        vertx.eventBus().consumer<Temperature>(BusAddresses.Serial.TEMPERATURE_MESSAGE_PARSED) {
+        vertx.eventBus().consumer<Temperature>(BusAddresses.TemperatureReadings.VALID_TEMPERATURE_READING_RECEIVED) {
+            save(it.body())
+        }
+
+        vertx.eventBus().consumer<Temperature>(BusAddresses.TemperatureControl.SWITCHED_HEATING_ON){
+            save(it.body())
+        }
+
+        vertx.eventBus().consumer<Temperature>(BusAddresses.TemperatureControl.SWITCHED_HEATING_OFF){
             save(it.body())
         }
 

@@ -49,7 +49,7 @@ class TemperatureReadingVerticle(val w1FileLocation: String = "/sys/bus/w1/devic
                             put("temperature", readTemperatureFromFile.component1()).
                             put("stamp", readTemperatureFromFile.component2())
 
-                    vertx.eventBus().publish(BusAddresses.TemperatureReadings.TEMPERATUR_READING_RECEIVED, receivedReading)
+                    vertx.eventBus().publish(BusAddresses.TemperatureReadings.TEMPERATURE_READING_RECEIVED, receivedReading)
                 }
             } catch(exception: FileNotFoundException) {
                 val message = JsonObject().put("code", 0).put("message", exception.message)

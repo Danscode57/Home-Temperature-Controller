@@ -53,7 +53,7 @@ class RESTVerticle(val serverPort: Int = 8080) : AbstractVerticle() {
                 val errorMessage = JsonObject().put("error", "setTemp can only be in 0.5 increments")
                 routingContext.response().setStatusCode(400).end(errorMessage.encodePrettily())
             } else {
-                vertx.eventBus().send<Float>(BusAddresses.Serial.SET_TEMPERATURE_IN_ARDUINO, temperatureToSet, { responseMessage ->
+                vertx.eventBus().send<Float>(BusAddresses.TemperatureControl.SET_TEMPERATURE, temperatureToSet, { responseMessage ->
                     if (responseMessage.succeeded()) {
                         routingContext.response().setStatusCode(201).end()
                     }

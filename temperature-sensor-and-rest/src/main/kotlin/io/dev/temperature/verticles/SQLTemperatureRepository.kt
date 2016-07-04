@@ -36,7 +36,9 @@ class SQLTemperatureRepository(val dbFilePath: String = "temperature.prod.db") :
             val initializationFuture = initializeDB()
             initializationFuture.setHandler {
                 if (it.succeeded()) {
-                    vertx.eventBus().consumer<Temperature>(BusAddresses.Serial.TEMPERATURE_MESSAGE_PARSED, { handleMessagePersistence(it) })
+                    vertx.eventBus().consumer<Temperature>(BusAddresses.TemperatureControl.SWITCHED_HEATING_ON) { handleMessagePersistence(it) }
+                    vertx.eventBus().consumer<Temperature>(BusAddresses.TemperatureControl.SWITCHED_HEATING_OFF) { handleMessagePersistence(it) }
+                    vertx.eventBus().consumer<Temperature>(BusAddresses.TemperatureReadings.VALID_TEMPERATURE_READING_RECEIVED) { handleMessagePersistence(it) }
 
                     vertx.eventBus().consumer<JsonObject>(BusAddresses.Repository.REPOSITORY_GET_ALL_OPERATIONS, { handleGetAllReqyest(it) })
 
@@ -50,6 +52,7 @@ class SQLTemperatureRepository(val dbFilePath: String = "temperature.prod.db") :
     }
 
     private fun handleMessagePersistence(message: Message<Temperature>) {
+        log.debug("Received message, processing")
         jdbcClient!!.getConnection { res ->
             val connection = res.result()
             val temperature = message.body()

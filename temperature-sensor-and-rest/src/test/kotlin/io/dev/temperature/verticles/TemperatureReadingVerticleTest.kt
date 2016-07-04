@@ -160,7 +160,7 @@ class TemperatureReadingVerticleTest {
         val asyncAssertSuccess = context.asyncAssertSuccess<String>()
         val waitingForMessage = context.async()
 
-        vertx.eventBus().consumer<JsonObject>(BusAddresses.TemperatureReadings.TEMPERATUR_READING_RECEIVED){ readingMessage ->
+        vertx.eventBus().consumer<JsonObject>(BusAddresses.TemperatureReadings.TEMPERATURE_READING_RECEIVED){ readingMessage ->
             val jsonObject = readingMessage.body()
             context.assertEquals(jsonObject.getFloat("temperature"), 20.437f)
             context.assertEquals(jsonObject.getString("stamp"), "6f")
@@ -188,7 +188,7 @@ class TemperatureReadingVerticleTest {
         val waitingForFirstMessage = context.async()
         val waitinfForFailMessage = context.async()
 
-        vertx.eventBus().consumer<JsonObject>(BusAddresses.TemperatureReadings.TEMPERATUR_READING_RECEIVED) { message ->
+        vertx.eventBus().consumer<JsonObject>(BusAddresses.TemperatureReadings.TEMPERATURE_READING_RECEIVED) { message ->
             waitingForFirstMessage.complete()
             sensorFile.delete()
         }
