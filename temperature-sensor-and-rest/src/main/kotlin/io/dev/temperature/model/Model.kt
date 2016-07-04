@@ -2,6 +2,7 @@ package io.dev.temperature.model
 
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.eventbus.MessageCodec
+import io.vertx.core.eventbus.impl.codecs.JsonObjectMessageCodec
 import io.vertx.core.json.JsonObject
 import java.time.Instant
 import java.time.LocalDateTime
@@ -31,6 +32,10 @@ data class Temperature(val value: Float, val temperatureSet: Float, val heating:
                 .put("setTemp", temperatureSet)
                 .put("heating", heating)
                 .put("date", date.toString())
+    }
+
+    fun copy(): Temperature {
+        return Temperature.fromJson(toJsonObject().copy())
     }
 }
 
@@ -107,8 +112,10 @@ data class NextScheduledTemp(val time: LocalDateTime, val temp: Float) {
 }
 
 class TemperatureCodec : MessageCodec<Temperature, Temperature> {
+    val jsonCodec: JsonObjectMessageCodec = JsonObjectMessageCodec()
+
     override fun systemCodecID(): Byte {
-        return -1
+        return 101
     }
 
     override fun name(): String? {
@@ -116,22 +123,15 @@ class TemperatureCodec : MessageCodec<Temperature, Temperature> {
     }
 
     override fun transform(p0: Temperature?): Temperature? {
-        return p0
+        return p0?.copy()
     }
 
     override fun decodeFromWire(p0: Int, p1: Buffer?): Temperature? {
-        val value = p1?.getFloat(p0)
-        val setTemp = p1?.getFloat(p0 + 4)
-        val heating: Boolean = if (p1?.getByte(p0 + 8) == Byte.MIN_VALUE ) false else true
-        val date = Instant.ofEpochMilli(p1?.getLong(p0 + 9)!!)
-        return Temperature(value!!, setTemp!!, heating, date)
+        return Temperature.fromJson(jsonCodec.decodeFromWire(p0, p1))
     }
 
     override fun encodeToWire(p0: Buffer?, p1: Temperature?) {
-        p0?.appendFloat(p1?.value!!)
-        p0?.appendFloat(p1?.temperatureSet!!)
-        p0?.appendByte(if (p1?.heating!!) 0 else 1)
-        p0?.appendLong(p1?.date?.toEpochMilli()!!)
+        jsonCodec.encodeToWire(p0, p1?.toJsonObject())
     }
 
 }
