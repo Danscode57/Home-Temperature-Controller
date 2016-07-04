@@ -62,8 +62,8 @@ class RESTVerticle(val serverPort: Int = 8080) : AbstractVerticle() {
         })
 
         router.get("/temp/:page/:limit").produces("application/json").handler({ routingContext ->
-            val limit = routingContext.request().getParam("limit").toInt()
-            val page = routingContext.request().getParam("page").toInt()
+            val limit = Integer.parseInt(routingContext.request().getParam("limit"))
+            val page = Integer.parseInt(routingContext.request().getParam("page"))
             val requestParameters = JsonObject().put("page", page).put("limit", limit)
             vertx.eventBus().send<JsonArray>(BusAddresses.Repository.REPOSITORY_GET_ALL_OPERATIONS, requestParameters, { reply ->
                 if (reply.failed()) {

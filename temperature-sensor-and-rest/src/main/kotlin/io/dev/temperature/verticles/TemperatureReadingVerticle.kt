@@ -4,7 +4,6 @@ import io.dev.temperature.BusAddresses
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
 import io.vertx.core.json.JsonObject
-import kotlinx.util.with
 import java.io.File
 import java.io.FileNotFoundException
 
@@ -70,16 +69,16 @@ class TemperatureReadingVerticle(val w1FileLocation: String = "/sys/bus/w1/devic
     }
 
     fun readTemperatureFromFile(deviceFile: File): Pair<Float, String>? {
-        deviceFile.with {
-            val fileContent = readText()
-            val stampMatch = STAMP_REGEX.find(fileContent) ?: return null
-            val match = TEMP_REGEX.find(fileContent) ?: return null
 
-            if (match.groups.size > 1) {
-                val fromFile = match.groupValues.last()
-                return Pair("${fromFile.subSequence(0, 2)}.${fromFile.subSequence(2, fromFile.length)}".toFloat(), stampMatch.groupValues.last())
-            }
+        val fileContent = deviceFile.readText()
+        val stampMatch = STAMP_REGEX.find(fileContent) ?: return null
+        val match = TEMP_REGEX.find(fileContent) ?: return null
+
+        if (match.groups.size > 1) {
+            val fromFile = match.groupValues.last()
+            return Pair("${fromFile.subSequence(0, 2)}.${fromFile.subSequence(2, fromFile.length)}".toFloat(), stampMatch.groupValues.last())
         }
+
         return null
     }
 }

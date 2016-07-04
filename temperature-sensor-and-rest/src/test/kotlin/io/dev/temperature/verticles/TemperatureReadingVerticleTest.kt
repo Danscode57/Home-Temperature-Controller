@@ -6,7 +6,6 @@ import io.vertx.core.Vertx
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.unit.TestContext
 import io.vertx.ext.unit.junit.VertxUnitRunner
-import kotlinx.util.with
 import org.junit.*
 import org.junit.runner.RunWith
 import java.io.File
@@ -60,9 +59,7 @@ class TemperatureReadingVerticleTest {
         directory.mkdirs()
 
         val sensorFile = File(directory, TemperatureReadingVerticle.SENSOR_FILE_NAME)
-        sensorFile.with {
-            writeText(SAMPLE_VALID_FILE_CONTENT)
-        }
+        sensorFile.writeText(SAMPLE_VALID_FILE_CONTENT)
 
         val verticle = TemperatureReadingVerticle(TEST_PATH_LOCATION)
 
@@ -89,9 +86,8 @@ class TemperatureReadingVerticleTest {
 
         val sensorFile = File(directory, TemperatureReadingVerticle.SENSOR_FILE_NAME)
 
-        sensorFile.with {
-            writeText("BALLS some lore ipsum shit and stuff")
-        }
+        sensorFile.writeText("BALLS some lore ipsum shit and stuff")
+
         val verticle = TemperatureReadingVerticle(TEST_PATH_LOCATION)
 
         val result = verticle.readTemperatureFromFile(sensorFile)
@@ -134,9 +130,9 @@ class TemperatureReadingVerticleTest {
         val directory = File(TEST_PATH_LOCATION, DEVICE_NAME_FOLDER)
         directory.mkdirs()
 
-        File(directory, TemperatureReadingVerticle.SENSOR_FILE_NAME).with {
-            writeText(SAMPLE_VALID_FILE_CONTENT)
-        }
+        val file = File(directory, TemperatureReadingVerticle.SENSOR_FILE_NAME)
+        file.writeText(SAMPLE_VALID_FILE_CONTENT)
+
 
         val waitingForFailedDeployment = context.async()
         val verticle = TemperatureReadingVerticle(TEST_PATH_LOCATION)
@@ -152,15 +148,15 @@ class TemperatureReadingVerticleTest {
         val directory = File(TEST_PATH_LOCATION, DEVICE_NAME_FOLDER)
         directory.mkdirs()
 
-        File(directory, TemperatureReadingVerticle.SENSOR_FILE_NAME).with {
-            writeText(SAMPLE_VALID_FILE_CONTENT)
-        }
+        val file = File(directory, TemperatureReadingVerticle.SENSOR_FILE_NAME)
+        file.writeText(SAMPLE_VALID_FILE_CONTENT)
+
 
         val verticle = TemperatureReadingVerticle(TEST_PATH_LOCATION, 0.1f)
         val asyncAssertSuccess = context.asyncAssertSuccess<String>()
         val waitingForMessage = context.async()
 
-        vertx.eventBus().consumer<JsonObject>(BusAddresses.TemperatureReadings.TEMPERATURE_READING_RECEIVED){ readingMessage ->
+        vertx.eventBus().consumer<JsonObject>(BusAddresses.TemperatureReadings.TEMPERATURE_READING_RECEIVED) { readingMessage ->
             val jsonObject = readingMessage.body()
             context.assertEquals(jsonObject.getFloat("temperature"), 20.437f)
             context.assertEquals(jsonObject.getString("stamp"), "6f")
@@ -174,14 +170,13 @@ class TemperatureReadingVerticleTest {
     }
 
 
-    @Test fun shouldSendSensorFailEvent(context: TestContext){
+    @Test fun shouldSendSensorFailEvent(context: TestContext) {
         val directory = File(TEST_PATH_LOCATION, DEVICE_NAME_FOLDER)
         directory.mkdirs()
 
         val sensorFile = File(directory, TemperatureReadingVerticle.SENSOR_FILE_NAME)
-        sensorFile.with {
-            writeText(SAMPLE_VALID_FILE_CONTENT)
-        }
+        sensorFile.writeText(SAMPLE_VALID_FILE_CONTENT)
+
 
         val verticle = TemperatureReadingVerticle(TEST_PATH_LOCATION, 0.1f)
         val asyncAssertSuccess = context.asyncAssertSuccess<String>()
