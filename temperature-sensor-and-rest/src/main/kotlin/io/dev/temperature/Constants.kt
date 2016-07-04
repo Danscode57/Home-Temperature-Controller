@@ -11,6 +11,8 @@ object BusAddresses {
 
     object TemperatureControl {
         const val SET_TEMPERATURE: String = "/control/set-temperature"
+        const val SWITCHED_HEATING_ON: String = "/control/switched-heating-on"
+        const val SWITCHED_HEATING_OFF: String = "/control/switched-heating-off"
     }
 
     object TemperatureReadings {
@@ -34,4 +36,11 @@ object BusAddresses {
 
 object RepositoryOperations {
     const val GET_LATEST = "GET_LATEST"
+}
+
+object Configuration {
+    const val INITIAL_TEMP = "initialTemperature"
+
+    const val GPIO_PINS_HEATING = "gpioHeating"
+    const val GPIO_PINS_INDICATOR = "gpioIndicator"
 }
