@@ -11,7 +11,7 @@ VERSION="1.0.0-SNAPSHOT"
 JNI_LOCATION="/usr/lib/jni"
 JAR_FILE="temperature-sensor-and-rest-${VERSION}-fat.jar"
 
-java -Djava.library.path=$JNI_LOCATION -jar $JAR_FILE  -conf prod.json > /dev/null 2>&1 &
+java -jar $JAR_FILE  -conf prod.json > /dev/null 2>&1 &
 
 PID=$!
 
