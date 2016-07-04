@@ -23,7 +23,7 @@ class TemperatureApp : AbstractVerticle() {
 
         vertx.deployVerticle(InMemoryTemperatureRepository())
 
-        vertx.deployVerticle(TemperatureReadingVerticle("./tmp"))
+        vertx.deployVerticle(TemperatureReadingVerticle())
 
         vertx.deployVerticle(TemperatureController())
 

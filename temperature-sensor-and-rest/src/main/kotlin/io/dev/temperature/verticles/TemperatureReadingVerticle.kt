@@ -62,7 +62,7 @@ class TemperatureReadingVerticle(val w1FileLocation: String = "/sys/bus/w1/devic
 
     fun deviceFolderPresent(): Pair<Boolean, File?> {
         val possibleFolders = File(w1FileLocation).listFiles { file, path -> path.startsWith(FILE_SEARCH_PATTERN) }
-        if (possibleFolders.size == 0) {
+        if (possibleFolders?.size == 0) {
             return Pair(false, null)
         }
         return Pair(true, possibleFolders.first())
