@@ -15,6 +15,7 @@ import kotlin.system.exitProcess
 class TemperatureApp : AbstractVerticle() {
 
     override fun start() {
+
         val deploymentOptionsoptions = DeploymentOptions().setWorker(true)
 
         vertx.eventBus().registerDefaultCodec(Temperature::class.java, TemperatureCodec())

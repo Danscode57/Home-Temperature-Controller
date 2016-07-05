@@ -18,4 +18,9 @@ class UtilsTests {
         assertEquals(18.5f, Utils.Temperature.roundTemperatureReading(18.3f))
     }
 
+
+    @Test fun shouldFormatGPIOPins(){
+        assertEquals("GPIO_01", "GPIO_%02d".format(1))
+        assertEquals("GPIO12", "GPIO%02d".format(12 ))
+    }
 }

@@ -23,8 +23,8 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
     val gpioHeatingControllerPin: Int = configuration.getInteger(Configuration.GPIO_PINS_HEATING, 0)
     val gpioHeatingIndicatorPin: Int = configuration.getInteger(Configuration.GPIO_PINS_INDICATOR, 2)
 
-    val heatingPin: GpioPinDigitalOutput = gpioController.provisionDigitalOutputPin(RaspiPin.getPinByName("GPIO%.2d".format(gpioHeatingControllerPin)), "HeatingPin")
-    val indicatorPin: GpioPinDigitalOutput = gpioController.provisionDigitalOutputPin(RaspiPin.getPinByName("GPIO%.2d".format(gpioHeatingIndicatorPin)), "IndicatorPin")
+    val heatingPin: GpioPinDigitalOutput = gpioController.provisionDigitalOutputPin(RaspiPin.getPinByName("GPIO %02d".format(gpioHeatingControllerPin)), "HeatingPin")
+    val indicatorPin: GpioPinDigitalOutput = gpioController.provisionDigitalOutputPin(RaspiPin.getPinByName("GPIO %02d".format(gpioHeatingIndicatorPin)), "IndicatorPin")
 
     var lastTemperatureReading: Float = Float.MAX_VALUE
     var lastTemperatureReadingStamp: String = ""
