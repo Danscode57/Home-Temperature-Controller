@@ -30,7 +30,7 @@ class TemperatureApp : AbstractVerticle() {
 
         vertx.deployVerticle(ScheduleVerticle())
 
-        vertx.deployVerticle(InMemoryTemperatureRepository())
+        vertx.deployVerticle(CurrentStatePersister())
 
         vertx.deployVerticle(TemperatureReadingVerticle(w1FileLocation = deviceSensorsLocation))
 
