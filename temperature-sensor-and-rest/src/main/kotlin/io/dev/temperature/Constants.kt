@@ -32,7 +32,10 @@ object RepositoryOperations {
 }
 
 object Configuration {
+    const val SIMULATED_HARDWARE = "simulatedHardware"
     const val INITIAL_TEMP = "initialTemperature"
+
+    const val SENSORS_DIRECTORY = "sensorsDirectory"
 
     const val GPIO_PINS_HEATING = "gpioHeating"
     const val GPIO_PINS_INDICATOR = "gpioIndicator"

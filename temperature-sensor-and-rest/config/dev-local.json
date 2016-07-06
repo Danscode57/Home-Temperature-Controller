@@ -1,0 +1,7 @@
+{
+  "simulatedHardware": true,
+  "sensorsDirectory": "./simulated-data",
+  "serialPort": {
+    "path": "/dev/ttyACM0"
+  }
+}

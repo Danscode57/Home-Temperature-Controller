@@ -23,8 +23,8 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
     val gpioHeatingControllerPin: Int = configuration.getInteger(Configuration.GPIO_PINS_HEATING, 0)
     val gpioHeatingIndicatorPin: Int = configuration.getInteger(Configuration.GPIO_PINS_INDICATOR, 2)
 
-    val heatingPin: GpioPinDigitalOutput = gpioController.provisionDigitalOutputPin(RaspiPin.getPinByName("GPIO %02d".format(gpioHeatingControllerPin)), "HeatingPin")
-    val indicatorPin: GpioPinDigitalOutput = gpioController.provisionDigitalOutputPin(RaspiPin.getPinByName("GPIO %02d".format(gpioHeatingIndicatorPin)), "IndicatorPin")
+    val heatingPin: GpioPinDigitalOutput = gpioController.provisionDigitalOutputPin(RaspiPin.getPinByName("GPIO ${gpioHeatingControllerPin}"), "HeatingPin")
+    val indicatorPin: GpioPinDigitalOutput = gpioController.provisionDigitalOutputPin(RaspiPin.getPinByName("GPIO ${gpioHeatingIndicatorPin}"), "IndicatorPin")
 
     var lastTemperatureReading: Float = Float.MAX_VALUE
     var lastTemperatureReadingStamp: String = ""
@@ -70,6 +70,7 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
     }
 
     fun processTemperatureReading(temperature: Float, stamp: String) {
+        log.info("Received temperature reading $temperature with stamp $stamp")
         if (stamp != lastTemperatureReadingStamp) {
             val timeNow = Instant.now()
             lastTemperatureReadingStamp = stamp
@@ -87,18 +88,18 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
 
 
     fun switchHeatingOn() {
+        log.info("Switching heating on")
         if (gpioController.getState(heatingPin).isLow){
-            gpioController.high(heatingPin)
-            gpioController.high(indicatorPin)
+            gpioController.high(heatingPin, indicatorPin)
             heatingOn = true
         }
         vertx.eventBus().publish(BusAddresses.TemperatureControl.SWITCHED_HEATING_ON, Temperature(lastTemperatureReading, setTemperature, heatingOn))
     }
 
     fun switchHeatingOff() {
+        log.info("Switching heating off")
         if (gpioController.getState(heatingPin).isHigh){
-            gpioController.low(heatingPin)
-            gpioController.low(indicatorPin)
+            gpioController.low(heatingPin, indicatorPin)
             heatingOn = false
         }
         vertx.eventBus().publish(BusAddresses.TemperatureControl.SWITCHED_HEATING_OFF, Temperature(lastTemperatureReading, setTemperature, heatingOn))

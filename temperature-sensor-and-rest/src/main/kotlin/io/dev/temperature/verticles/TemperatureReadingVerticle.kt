@@ -4,6 +4,7 @@ import io.dev.temperature.BusAddresses
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
 import io.vertx.core.json.JsonObject
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileNotFoundException
 
@@ -11,7 +12,9 @@ import java.io.FileNotFoundException
  * Created by gigu on 18/06/2016.
  */
 class TemperatureReadingVerticle(val w1FileLocation: String = "/sys/bus/w1/devices", val frequency: Float = 5f) : AbstractVerticle() {
+    val log = LoggerFactory.getLogger(TemperatureReadingVerticle::class.java)
     var periodicTimer: Long = 0
+
 
     companion object {
         val FILE_SEARCH_PATTERN = "28-"
@@ -39,6 +42,7 @@ class TemperatureReadingVerticle(val w1FileLocation: String = "/sys/bus/w1/devic
         }
 
         val delay: Long = (frequency * 1000).toLong()
+        log.info("Scheduling periodic reads of temperature from file ${sensorFile.absolutePath}")
         periodicTimer = vertx.setPeriodic(delay) { delay ->
             try {
                 val readTemperatureFromFile = readTemperatureFromFile(sensorFile)
@@ -51,6 +55,7 @@ class TemperatureReadingVerticle(val w1FileLocation: String = "/sys/bus/w1/devic
                     vertx.eventBus().publish(BusAddresses.TemperatureReadings.TEMPERATURE_READING_RECEIVED, receivedReading)
                 }
             } catch(exception: FileNotFoundException) {
+                log.warn("Problem reading temperature from file", exception)
                 val message = JsonObject().put("code", 0).put("message", exception.message)
                 vertx.eventBus().publish(BusAddresses.TemperatureReadings.TEMPERATURE_SENSOR_READING_FAILED, message)
             }
@@ -61,7 +66,11 @@ class TemperatureReadingVerticle(val w1FileLocation: String = "/sys/bus/w1/devic
     }
 
     fun deviceFolderPresent(): Pair<Boolean, File?> {
-        val possibleFolders = File(w1FileLocation).listFiles { file, path -> path.startsWith(FILE_SEARCH_PATTERN) }
+        val devicesPath = File(w1FileLocation)
+        if (!devicesPath.exists()) {
+            return Pair(false, null)
+        }
+        val possibleFolders = devicesPath.listFiles { file, path -> path.startsWith(FILE_SEARCH_PATTERN) }
         if (possibleFolders?.size == 0) {
             return Pair(false, null)
         }
