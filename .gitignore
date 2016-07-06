@@ -16,3 +16,4 @@ temperature-sensor-and-rest/schedule.json
 temperature-sensor-and-rest/scripts/*.service
 out/
 **/.idea/
+**/application-state.json
