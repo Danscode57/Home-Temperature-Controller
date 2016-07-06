@@ -18,7 +18,7 @@ import java.time.Instant
  * Created by gigu on 22/06/2016.
  */
 class TemperatureController(val configuration: JsonObject = JsonObject(), val gpioController: GpioController = GpioFactory.getInstance()) : AbstractVerticle() {
-    val log = LoggerFactory.getLogger("Temperature Controller")
+    val log = LoggerFactory.getLogger(TemperatureController::class.java)
 
     val gpioHeatingControllerPin: Int = configuration.getInteger(Configuration.GPIO_PINS_HEATING, 0)
     val gpioHeatingIndicatorPin: Int = configuration.getInteger(Configuration.GPIO_PINS_INDICATOR, 2)
@@ -70,8 +70,11 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
     }
 
     fun processTemperatureReading(temperature: Float, stamp: String) {
-        log.info("Received temperature reading $temperature with stamp $stamp")
+        log.debug("Received temperature reading $temperature with stamp $stamp")
+
         if (stamp != lastTemperatureReadingStamp) {
+            log.info("Received temperature reading $temperature with stamp $stamp")
+
             val timeNow = Instant.now()
             lastTemperatureReadingStamp = stamp
             lastTemperatureReading = Utils.Temperature.roundTemperatureReading(temperature)
