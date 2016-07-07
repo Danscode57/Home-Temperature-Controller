@@ -10,7 +10,7 @@ object BusAddresses {
 
     object TemperatureReadings {
         const val TEMPERATURE_READING_RECEIVED: String = "/temperature/received"
-        const val VALID_TEMPERATURE_READING_RECEIVED: String = "/temperature/received-valid"
+        const val MODIFIED_TEMPERATURE_READING_OR_SETTING: String = "/temperature/received-valid"
         const val TEMPERATURE_SENSOR_READING_FAILED: String = "/temperature/sensor_failed"
     }
 
@@ -33,8 +33,6 @@ object RepositoryOperations {
 
 object Configuration {
     const val SIMULATED_HARDWARE = "simulatedHardware"
-    const val INITIAL_TEMP = "initialTemperature"
-
     const val SENSORS_DIRECTORY = "sensorsDirectory"
 
     const val GPIO_PINS_HEATING = "gpioHeating"

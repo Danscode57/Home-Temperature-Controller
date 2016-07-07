@@ -24,15 +24,14 @@ class TemperatureApp : AbstractVerticle() {
         val simulatedHardware = config.getBoolean(Configuration.SIMULATED_HARDWARE, true)
         val deviceSensorsLocation = config.getString(Configuration.SENSORS_DIRECTORY, "/sys/bus/w1/devices")
 
-        val deploymentOptions = DeploymentOptions().setWorker(true)
+        val workerDeploymentOptions = DeploymentOptions().setWorker(true).setConfig(config)
 
         vertx.eventBus().registerDefaultCodec(Temperature::class.java, TemperatureCodec())
 
         vertx.deployVerticle(ScheduleVerticle())
 
-        vertx.deployVerticle(CurrentStatePersister())
-
         vertx.deployVerticle(TemperatureReadingVerticle(w1FileLocation = deviceSensorsLocation))
+        //TODO: add deployment verticle for deployments and undeployments
 
         if (simulatedHardware) {
             val simulatedGpioController = SimulatedGpioController()
@@ -48,7 +47,7 @@ class TemperatureApp : AbstractVerticle() {
         })
 
 
-        vertx.deployVerticle(SQLTemperatureRepository(), deploymentOptions)
+        vertx.deployVerticle(SQLTemperatureRepository(), workerDeploymentOptions)
 
     }
 }

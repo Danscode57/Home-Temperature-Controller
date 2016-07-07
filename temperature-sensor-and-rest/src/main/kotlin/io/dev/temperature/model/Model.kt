@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-data class Temperature(val value: Float, val temperatureSet: Float, val heating: Boolean, val date: Instant = Instant.now()) {
+data class Temperature(val value: Float, val temperatureSet: Float, val heating: Boolean, val date: Instant = Instant.now(), val sensorOk: Boolean = true) {
     companion object {
 
         fun fromJson(jsonObject: JsonObject): Temperature {
@@ -17,7 +17,8 @@ data class Temperature(val value: Float, val temperatureSet: Float, val heating:
                     jsonObject.getFloat("value"),
                     jsonObject.getFloat("setTemp"),
                     jsonObject.getBoolean("heating"),
-                    Instant.parse(jsonObject.getString("date")))
+                    Instant.parse(jsonObject.getString("date")),
+                    jsonObject.getBoolean("sensorOk", true))
         }
 
     }
@@ -32,6 +33,7 @@ data class Temperature(val value: Float, val temperatureSet: Float, val heating:
                 .put("setTemp", temperatureSet)
                 .put("heating", heating)
                 .put("date", date.toString())
+                .put("sensorOk", sensorOk)
     }
 
     fun copy(): Temperature {

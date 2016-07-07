@@ -1,5 +1,4 @@
 {
-  "serialPort": {
-    "path": "/dev/ttyACM0"
-  }
+  "simulatedHardware": false,
+  "sensorsDirectory": "/sys/bus/w1/devices"
 }

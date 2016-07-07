@@ -105,11 +105,11 @@ class SimulatedGpioController : GpioController {
     }
 
     override fun provisionDigitalOutputPin(pin: Pin?, name: String?, defaultState: PinState?): GpioPinDigitalOutput? {
-        throw UnsupportedOperationException()
+        return provisionDigitalOutputPin(pin, name)
     }
 
     override fun provisionDigitalOutputPin(pin: Pin?, defaultState: PinState?): GpioPinDigitalOutput? {
-        throw UnsupportedOperationException()
+        return provisionDigitalOutputPin(pin, pin!!.name, defaultState)
     }
 
     override fun provisionDigitalOutputPin(pin: Pin?, name: String?): GpioPinDigitalOutput? {

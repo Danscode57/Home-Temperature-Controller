@@ -55,7 +55,7 @@ class SQLTemperatureRepositoryTest {
         val savedTemperature = Temperature(10.0f, 11.5f, false)
         val waitingForPersisingInDb = context.async()
 
-        vertx.eventBus().publish(BusAddresses.TemperatureReadings.VALID_TEMPERATURE_READING_RECEIVED, savedTemperature)
+        vertx.eventBus().publish(BusAddresses.TemperatureReadings.MODIFIED_TEMPERATURE_READING_OR_SETTING, savedTemperature)
         jdbcClient?.getConnection { res ->
             val sqlConnection = res.result()
             sqlConnection.query("select * from TEMPERATURE", { queryResult ->

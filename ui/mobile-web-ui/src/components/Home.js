@@ -33,11 +33,11 @@ class HomeComponent extends React.Component {
     }
 
     getTempUrl() {
-        return 'http://' + window.location.hostname + ':8080/temp';
+        return 'http://192.168.1.78:8080/temp'; //;'http://' + window.location.hostname + ':8080/temp';//
     }
 
     getStatusUrl() {
-        return 'http://' + window.location.hostname + ':8080/status';
+        return 'http://192.168.1.78:8080/status'; //'http://' + window.location.hostname + ':8080/status';//
 
     }
 

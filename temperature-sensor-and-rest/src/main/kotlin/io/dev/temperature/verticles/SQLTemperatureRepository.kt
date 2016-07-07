@@ -38,7 +38,7 @@ class SQLTemperatureRepository(val dbFilePath: String = "temperature.prod.db") :
                 if (it.succeeded()) {
                     vertx.eventBus().consumer<Temperature>(BusAddresses.TemperatureControl.SWITCHED_HEATING_ON) { handleMessagePersistence(it) }
                     vertx.eventBus().consumer<Temperature>(BusAddresses.TemperatureControl.SWITCHED_HEATING_OFF) { handleMessagePersistence(it) }
-                    vertx.eventBus().consumer<Temperature>(BusAddresses.TemperatureReadings.VALID_TEMPERATURE_READING_RECEIVED) { handleMessagePersistence(it) }
+                    vertx.eventBus().consumer<Temperature>(BusAddresses.TemperatureReadings.MODIFIED_TEMPERATURE_READING_OR_SETTING) { handleMessagePersistence(it) }
 
                     vertx.eventBus().consumer<JsonObject>(BusAddresses.Repository.REPOSITORY_GET_ALL_OPERATIONS, { handleGetAllReqyest(it) })
 
