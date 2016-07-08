@@ -82,6 +82,13 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
                 else -> log.error("I received strange request ${message.body()} I don't know how to deal with")
             }
         }
+
+        vertx.eventBus().consumer<Any>(BusAddresses.TemperatureReadings.TEMPERATURE_SENSOR_READING_FAILED) {
+            save(Temperature(currentReading.value, currentReading.temperatureSet, currentReading.heating, sensorOk = false))
+        }
+        vertx.eventBus().consumer<Any>(BusAddresses.TemperatureReadings.DEPLOYMENT_FAILED) {
+            save(Temperature(currentReading.value, currentReading.temperatureSet, currentReading.heating, sensorOk = false))
+        }
     }
 
     fun processTemperatureReading(temperature: Float, stamp: String) {
@@ -111,7 +118,7 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
                 heatingPin.high()
                 indicatorPin.high()
 
-                val temperature = Temperature(currentReading.value, currentReading.temperatureSet, true)
+                val temperature = Temperature(currentReading.value, currentReading.temperatureSet, true, sensorOk = currentReading.sensorOk)
 
                 log.info("Switched heating on")
                 save(temperature)
@@ -127,7 +134,7 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
             if (heatingPin.isHigh) {
                 heatingPin.low()
                 indicatorPin.low()
-                val temperature = Temperature(currentReading.value, currentReading.temperatureSet, false)
+                val temperature = Temperature(currentReading.value, currentReading.temperatureSet, false, sensorOk = currentReading.sensorOk)
 
                 log.info("Switched heating off")
                 save(temperature)

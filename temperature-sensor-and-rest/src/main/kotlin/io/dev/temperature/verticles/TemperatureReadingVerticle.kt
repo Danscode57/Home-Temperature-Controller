@@ -53,16 +53,15 @@ class TemperatureReadingVerticle(val w1FileLocation: String = "/sys/bus/w1/devic
                             put("stamp", readTemperatureFromFile.component2())
 
                     vertx.eventBus().publish(BusAddresses.TemperatureReadings.TEMPERATURE_READING_RECEIVED, receivedReading)
+                } else {
+                    vertx.eventBus().publish(BusAddresses.TemperatureReadings.TEMPERATURE_SENSOR_READING_FAILED, "Message in a file has strange format impossible to parse")
                 }
             } catch(exception: FileNotFoundException) {
                 log.warn("Problem reading temperature from file", exception)
-                val message = JsonObject().put("code", 0).put("message", exception.message)
-                vertx.eventBus().publish(BusAddresses.TemperatureReadings.TEMPERATURE_SENSOR_READING_FAILED, message)
+                vertx.eventBus().publish(BusAddresses.TemperatureReadings.TEMPERATURE_SENSOR_READING_FAILED, exception.message)
             }
         }
         startFuture!!.complete()
-
-
     }
 
     fun deviceFolderPresent(): Pair<Boolean, File?> {
@@ -88,6 +87,7 @@ class TemperatureReadingVerticle(val w1FileLocation: String = "/sys/bus/w1/devic
             return Pair("${fromFile.subSequence(0, 2)}.${fromFile.subSequence(2, fromFile.length)}".toFloat(), stampMatch.groupValues.last())
         }
 
+        log.warn("Content of a file is not parsable [$fileContent]")
         return null
     }
 }

@@ -11,7 +11,9 @@ object BusAddresses {
     object TemperatureReadings {
         const val TEMPERATURE_READING_RECEIVED: String = "/temperature/received"
         const val MODIFIED_TEMPERATURE_READING_OR_SETTING: String = "/temperature/received-valid"
-        const val TEMPERATURE_SENSOR_READING_FAILED: String = "/temperature/sensor_failed"
+        const val TEMPERATURE_SENSOR_READING_FAILED: String = "/temperature/sensor-failed"
+
+        const val DEPLOYMENT_FAILED: String = "/temperature/deployment-failed"
     }
 
     object Repository {

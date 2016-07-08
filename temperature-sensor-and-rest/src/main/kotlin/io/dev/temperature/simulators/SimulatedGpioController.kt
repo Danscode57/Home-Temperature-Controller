@@ -17,7 +17,7 @@ class SimulatedGpioController : GpioController {
     }
 
     override fun getProvisionedPins(): MutableCollection<GpioPin>? {
-        throw UnsupportedOperationException()
+        return mutableListOf()
     }
 
     override fun pulse(milliseconds: Long, vararg pin: GpioPinDigitalOutput?) {

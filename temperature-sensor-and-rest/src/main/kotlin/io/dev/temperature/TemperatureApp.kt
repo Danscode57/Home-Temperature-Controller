@@ -30,8 +30,10 @@ class TemperatureApp : AbstractVerticle() {
 
         vertx.deployVerticle(ScheduleVerticle())
 
-        vertx.deployVerticle(TemperatureReadingVerticle(w1FileLocation = deviceSensorsLocation))
-        //TODO: add deployment verticle for deployments and undeployments
+        val temperatureReadingVerticle = TemperatureReadingVerticle(w1FileLocation = deviceSensorsLocation)
+        val deploymentVerticle = DeploymentVerticle(temperatureReadingVerticle)
+
+        vertx.deployVerticle(deploymentVerticle)
 
         if (simulatedHardware) {
             val simulatedGpioController = SimulatedGpioController()

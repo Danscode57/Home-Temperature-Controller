@@ -9,7 +9,9 @@ import java.util.concurrent.Future
  * Created by gigu on 05/07/2016.
  */
 
-class SimulatedGpioPin(val ping: Int, val pinName: String) : GpioPinDigitalOutput {
+class SimulatedGpioPin(val pinNumber: Int, val pinName: String) : GpioPinDigitalOutput {
+    var highLow: Boolean = false
+
     override fun getPin(): Pin? {
         throw UnsupportedOperationException()
     }
@@ -223,7 +225,7 @@ class SimulatedGpioPin(val ping: Int, val pinName: String) : GpioPinDigitalOutpu
     }
 
     override fun isHigh(): Boolean {
-        throw UnsupportedOperationException()
+        return highLow
     }
 
     override fun isLow(): Boolean {
