@@ -12,11 +12,10 @@
 
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:
-INSTALL_DIR=/usr/local/
+INSTALL_DIR=/usr/local/heating-controller
 
 DESC="Heating Controller"
 VERSION="2.0.0-SNAPSHOT"
-JNI_LOCATION="/usr/lib/jni"
 JAR_FILE="temperature-sensor-and-rest-${VERSION}-fat.jar"
 PID_FILE=/var/run/heating-controller.pid
 
@@ -29,7 +28,8 @@ start () {
          kill -9 $OLD_PID
          rm -rf $PID_FILE
     fi
-    java -jar $JAR_FILE  -conf prod.json > /dev/null 2>&1 &
+    cd $INSTALL_DIR
+    java -jar $JAR_FILE  -conf prod.json > /tmp/heating.log 2>&1 &
 
     PID=$!
 
