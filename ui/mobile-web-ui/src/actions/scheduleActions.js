@@ -27,7 +27,7 @@ export function copyPreviousDay(day) {
 // ============= HERE BE A LOT OF ASYNC FUNCTIONS ================ //
 
 function getScheduleUrl() {
-    return 'http://' + window.location.hostname + ':8080/schedule'; //'http://192.168.1.78:8080/schedule';//
+    return 'http://' + window.location.hostname + ':8080/schedule';
 }
 
 function requestSchedule() {
