@@ -3,7 +3,7 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 INSTALL_PATH=/usr/local/heating-controller/
 
-. /lib/lsb/init-function
+. /lib/lsb/init-functions
 
 check_if_running_as_root() {
     if [ "$EUID" -ne 0 ]
@@ -17,7 +17,7 @@ remove_old_installation() {
     echo "Removing old installation ..."
     if [ -f /etc/init.d/heating-controller ]; then
         echo "Removing service files"
-        service stop heating-controller
+        service heating-controller stop
         update-rc.d heating-controller remove
         rm -rf /etc/init.d/heating-controller
     fi
@@ -36,14 +36,13 @@ install() {
 
     cp temperature-sensor-and-rest*.jar $INSTALL_PATH
     cp prod.json $INSTALL_PATH/prod.json
-    cp schedule.json $INSTALL_PATH
     cp heating-controller /etc/init.d/
 
     chown root.root $INSTALL_PATH/ -R
     chmod 755 /etc/init.d/heating-controller && chown root.root /etc/init.d/heating-controller
 
     update-rc.d heating-controller defaults
-    service start heating-controller
+    service heating-controller start
 }
 
 check_if_running_as_root
