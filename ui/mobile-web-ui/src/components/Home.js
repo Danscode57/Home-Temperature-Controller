@@ -9,6 +9,7 @@ import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 import ContentRemove from 'material-ui/lib/svg-icons/content/remove';
 import ActionSchedule from 'material-ui/lib/svg-icons/action/schedule';
+import AlertWarning from 'material-ui/lib/svg-icons/alert/warning';
 
 import {blue500, amber500, red500, grey100} from 'material-ui/lib/styles/colors';
 
@@ -23,6 +24,8 @@ class HomeComponent extends React.Component {
             setTemp: 19.0,
             date: new Date(),
             heating: 'off',
+            sensor: true,
+            sensorWarning: grey100,
             program: undefined,
             activeSchedule: grey100,
             activeScheduleOn: 'off',
@@ -33,11 +36,11 @@ class HomeComponent extends React.Component {
     }
 
     getTempUrl() {
-        return 'http://192.168.1.78:8080/temp'; //;'http://' + window.location.hostname + ':8080/temp';//
+        return 'http://' + window.location.hostname + ':8080/temp';//'http://192.168.1.78:8080/temp'; //;
     }
 
     getStatusUrl() {
-        return 'http://192.168.1.78:8080/status'; //'http://' + window.location.hostname + ':8080/status';//
+        return 'http://' + window.location.hostname + ':8080/status';//'http://192.168.1.78:8080/status'; //
 
     }
 
@@ -62,12 +65,15 @@ class HomeComponent extends React.Component {
             let setTemp = parseFloat(json.temperature.setTemp);
             let heating = json.temperature.heating ? 'on' : 'off';
             let date = new Date(Date.parse(json.temperature.date));
+            let sensor = json.temperature.sensorOk;
 
             self.setState({
                 currentTemp: currentTemp,
                 setTemp: setTemp,
                 heating: heating,
                 date: date,
+                sensor: sensor,
+                sensorWarning: sensor ? grey100 : red500,
                 activeSchedule: json.scheduleActive ? red500 : grey100,
                 activeScheduleOn: json.scheduleActive ? 'on' : 'off',
                 nextTemperature: json.nextTemperature,
@@ -165,6 +171,7 @@ class HomeComponent extends React.Component {
                         <ContentRemove />
                     </FloatingActionButton>
                     <ActionSchedule color={this.state.activeSchedule} />
+                    <AlertWarning color={this.state.sensorWarning} />
                     <FloatingActionButton secondary={true} style={marginLeft} onClick={this.handleUp.bind(this)}
                                           disabled={this.state.buttonDisabled}>
                         <ContentAdd />

@@ -84,9 +84,11 @@ class TemperatureController(val configuration: JsonObject = JsonObject(), val gp
         }
 
         vertx.eventBus().consumer<Any>(BusAddresses.TemperatureReadings.TEMPERATURE_SENSOR_READING_FAILED) {
+            lastTemperatureReadingStamp = ""
             save(Temperature(currentReading.value, currentReading.temperatureSet, currentReading.heating, sensorOk = false))
         }
         vertx.eventBus().consumer<Any>(BusAddresses.TemperatureReadings.DEPLOYMENT_FAILED) {
+            lastTemperatureReadingStamp = ""
             save(Temperature(currentReading.value, currentReading.temperatureSet, currentReading.heating, sensorOk = false))
         }
     }

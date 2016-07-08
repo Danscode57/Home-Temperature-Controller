@@ -197,11 +197,11 @@ class SimulatedGpioPin(val pinNumber: Int, val pinName: String) : GpioPinDigital
     }
 
     override fun low() {
-        throw UnsupportedOperationException()
+        highLow = false
     }
 
     override fun high() {
-        throw UnsupportedOperationException()
+        highLow = true
     }
 
     override fun toggle() {
@@ -229,7 +229,7 @@ class SimulatedGpioPin(val pinNumber: Int, val pinName: String) : GpioPinDigital
     }
 
     override fun isLow(): Boolean {
-        throw UnsupportedOperationException()
+       return !highLow
     }
 
     override fun getState(): PinState? {
