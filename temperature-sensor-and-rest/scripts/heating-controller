@@ -34,13 +34,13 @@ start () {
     PID=$!
 
     if [ $? != 0 ]; then
-        log_failure_message "Process started with errors"
+        echo "Process started with errors"
         exit 1
     fi
 
     echo $PID > $PID_FILE
 
-    log_success_message "Service started with PID $PID"
+    echo "Service started with PID $PID"
 }
 
 
@@ -49,9 +49,9 @@ stop () {
         OLD_PID=`cat $PID_FILE`
         kill -9 $OLD_PID
         rm -rf $PID_FILE
-        log_success_message "Heating Controller stopped"
+        echo "Heating Controller stopped"
     else
-        log_success_message "Nothing seems to be running anyway"
+        echo "Nothing seems to be running anyway"
     fi
     exit 0
 }
